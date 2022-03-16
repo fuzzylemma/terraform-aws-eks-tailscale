@@ -1,13 +1,13 @@
-- paramaterize proxy
-- helper module for rbac / service role
-    - helper module config is default option
-- clean tailscale proxy module example / simple eks
-- clean tailscale docker build
-    - proxy image
-    - subnet router image
-
-what version are not v1 kubernetes resources?
-figure out envFrom?
-what is DNAT
-ipv6 config?
-routes not working
+[~] paramaterize proxy
+[ ] helper module for rbac / service role
+    [ ] helper module config is default option
+[ ] clean tailscale proxy module example / simple eks
+[ ] move docker `run.sh` to an `entrypoint.sh`
+[ ] container health checks
+[ ] configurable resources
+[ ] utilize tailscale api
+    [ ] auto approve routes
+    [ ] configurable remove devices with same name
+[~] clean tailscale docker build
+    [ ] proxy image
+    [~] subnet router image
