@@ -1,27 +1,38 @@
-resource "kubernetes_deployment_v1" "tailscale" {
-  //depends_on = [kubernetes_service_v1.nginx_cluster_ip.id]
+locals {
+  auth_key_key = "AUTH_KEY"
+  image_name = "fuzzylemma/tailscale"
+  image_tag = "latest"
+}
+
+resource "kubernetes_deployment" "subnet_router" {
   metadata {
-    name = var.name 
+    name = var.deployment_name 
+    namespace = var.namespace 
     labels = {
-      App = var.app 
+      app = var.app_name 
     }
   }
+
   spec {
-    replicas = var.replicas 
+    replicas = 1 
+
     selector {
       match_labels = {
-        App = var.app 
+        app = var.app_name 
       }
     }
+
     template {
       metadata {
+        name = var.pod_name
         labels = {
-          App = var.app 
+          app = var.app_name 
         }
       }
       spec {
-        service_account_name = var.service_account_name 
 
+        service_account_name = var.service_account 
+        // get around pod security policy
         init_container {
           name = "sysctler"
           image = "busybox"
@@ -33,32 +44,45 @@ resource "kubernetes_deployment_v1" "tailscale" {
         }
 
         container {
-          image = "fuzzylemma/tailscale:latest"
+          name = var.container_name 
+          image = "${local.image_name}:${local.image_tag}"
           image_pull_policy = "Always"
-          name = "${var.name}-cont" 
+
           env {
             name = "KUBE_SECRET"
-            value = "${var.state_secret_name}"
+            value = var.auth_state_secret 
           }
           env {
             name = "USERSPACE"
-            value = "${var.userspace}" 
+            value = "false" 
           }
           env {
             name = "AUTH_KEY"
-            value = "${var.tailscale_auth_key}" // envFrom
+            value_from {
+              secret_key_ref {
+                name = var.auth_key_secret 
+                key = local.auth_key_key  
+              }
+            }
           }
+
           env {
-            name = "DEST_IP"
-            value = "${var.service_cluster_ip}" 
+            name = "ROUTES"
+            value = join(",", var.routes)
           }
+
           security_context {
             capabilities {
               add = ["NET_ADMIN", "SYS_MODULE"]
             }
           }
+
         } // container
+      
       } // ispec
+
     } // template
+
   } // ospec
+
 }
