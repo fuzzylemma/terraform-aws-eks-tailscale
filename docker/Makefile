@@ -6,8 +6,13 @@ REPO=fuzzylemma
 IMAGE_NAME=tailscale
 IMAGE_TAG=latest
 
-build:
-	@docker build . -t $(REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
+base:
+	@docker build . -f Dockerfile.k8s -t $(REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
+	@docker push $(REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
+
+
+build: base
+	@docker build . -f Dockerfile.k8s -t $(REPO)/$(IMAGE_NAME)-subnet-router:$(IMAGE_TAG)
 
 push: build
-	@docker push $(REPO)/$(IMAGE_NAME):$(IMAGE_TAG)
+	@docker push $(REPO)/$(IMAGE_NAME)-subnet-router:$(IMAGE_TAG)
