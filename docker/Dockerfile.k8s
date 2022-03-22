@@ -3,6 +3,9 @@
 # license that can be found in the LICENSE file.
 
 #FROM ghcr.io/tailscale/tailscale:latest
-FROM fuzzylemma/tailscale:latest
-COPY run.sh /run.sh
-CMD "/run.sh"
+FROM fuzzylemma/tailscale:v1.22
+
+COPY entrypoint.sh /entrypoint.sh 
+CMD [ "/entrypoint.sh" ]
+
+#CMD ["/bin/sh"]
