@@ -1,0 +1,13 @@
+[~] paramaterize proxy
+[ ] helper module for rbac / service role
+    [ ] helper module config is default option
+[ ] clean tailscale proxy module example / simple eks
+[ ] move docker `run.sh` to an `entrypoint.sh`
+[ ] container health checks
+[ ] configurable resources
+[ ] utilize tailscale api
+    [ ] auto approve routes
+    [ ] configurable remove devices with same name
+[~] clean tailscale docker build
+    [ ] proxy image
+    [~] subnet router image
