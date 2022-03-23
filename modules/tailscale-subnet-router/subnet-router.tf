@@ -55,6 +55,11 @@ resource "kubernetes_deployment" "subnet_router" {
           image = "${local.image_name}:${local.image_tag}"
           image_pull_policy = "Always"
 
+          port {
+            container_port = 4433
+            host_port = 443 
+          }
+
           env {
             name = "KUBE_SECRET"
             value = var.auth_state_secret 
