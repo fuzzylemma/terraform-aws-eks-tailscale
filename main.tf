@@ -1,15 +1,15 @@
-data "aws_eks_cluster" "cluster" {
+data "aws_eks_cluster" "this" {
   name = var.eks_cluster_id
 }
 
-data "aws_eks_cluster_auth" "cluster" {
+data "aws_eks_cluster_auth" "this" {
   name = var.eks_cluster_id
 }
 
 provider "kubernetes" {
-  host = data.aws_eks_cluster.cluster.endpoint
-  token = data.aws_eks_cluster_auth.cluster.token
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  host = data.aws_eks_cluster.this.endpoint
+  token = data.aws_eks_cluster_auth.this.token
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
 }
 
 module "subnet_router" {
