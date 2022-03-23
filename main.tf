@@ -14,5 +14,5 @@ provider "kubernetes" {
 
 module "subnet_router" {
   source   = "./modules/tailscale-subnet-router"
-  auth_key = var.tailscale_auth_key
+  tailscale_auth_key = var.tailscale_auth_key
 }

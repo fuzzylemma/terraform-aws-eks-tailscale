@@ -4,6 +4,6 @@ resource "kubernetes_secret" "tailscale_auth" {
     namespace = var.namespace
   }
   data = {
-    AUTH_KEY = var.auth_key 
+    AUTH_KEY = var.tailscale_auth_key 
   }
 }
