@@ -4,6 +4,8 @@
 
 # terraform aws eks tailscale
 
+Terraform module to make AWS EKS cluster accesible through [tailscale](https://tailscale.com).
+
 ## usage
 ```
 module "tailscale" {
