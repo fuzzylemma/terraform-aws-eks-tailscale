@@ -1,4 +1,17 @@
 # terraform aws eks tailscale
+
+
+## usage
+```
+module "tailscale" {
+    source = "fuzzylemma/eks-tailscale/aws" 
+    version = "0.1.0"
+    auth_key = "<authentication from tailscale>"
+    eks_cluster_id = "<aws eks cluster id>"
+}
+```
+> Note: this deployment does not configure security groups. The deployment should be able to reach tailscale DERP servers over port `443`. Ingress and egress rules are needed for this.
+
  
 
 ## references
