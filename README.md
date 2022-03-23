@@ -17,6 +17,7 @@ module "tailscale" {
 ```
 > Note: this deployment does not configure security groups. The deployment should be able to reach tailscale DERP servers over port `443`. Ingress and egress rules are needed for this.
 
+> Note: after deployment, the routes need to be manually approved in tailscale UI before they are accessible.
  
 
 ## references
