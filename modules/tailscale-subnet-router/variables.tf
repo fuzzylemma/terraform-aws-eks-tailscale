@@ -44,7 +44,7 @@ variable "auth_state_secret" {
   type = string
 }
 variable "auth_key_secret" {
-  descrpition = "AWS EKS secret name to store tailscale authentication key"
+  description = "AWS EKS secret name to store tailscale authentication key"
   default = "tailscale-auth-key"
   type = string
 }
