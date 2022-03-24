@@ -55,9 +55,12 @@ variable "auth_key_secret" {
   default = "tailscale-auth-key"
   type = string
 }
-
 variable "routes" {
   description = "CIDR blocks to be advertised by the tailscale subnet router"
   default = ["172.20.0.0/16", "10.0.0.0/16"]
   type = list(string)
+}
+variable "region" {
+  description = "AWS EKS region the tailscale deployment should be deployed in"
+  type = string
 }

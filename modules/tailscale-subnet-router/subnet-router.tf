@@ -1,16 +1,26 @@
 locals {
   auth_key_key = "AUTH_KEY"
+  version = "0.1.2"
   image_name = "fuzzylemma/tailscale-subnet-router"
+  instance = "${var.app_name}-${var.instance_name}" 
   image_tag = "test"
+  managed_by = "terraform"
+  component = "vpn"
+  labels = {
+     "app.kubernetes.io/name"        = var.app_name 
+     "app.kubernetes.io/instance"    = local.instance 
+     "app.kubernetes.io/managed-by"  = local.managed_by 
+     "app.kubernetes.io/component"   = local.component 
+     "app.kubernetes.io/version"     = local.version 
+     "topology.kubernetes.io/region" = var.region
+  }
 }
 
 resource "kubernetes_deployment" "subnet_router" {
   metadata {
     name = var.deployment_name 
     namespace = var.namespace 
-    labels = {
-      app = var.app_name 
-    }
+    labels = local.labels
   }
 
   spec {
@@ -19,8 +29,15 @@ resource "kubernetes_deployment" "subnet_router" {
     replicas = 1 
 
     selector {
-      match_labels = {
-        app = var.app_name 
+      match_expressions {
+        key = "app.kubernetes.io/name"
+        operator = "In"
+        values = [var.app_name]
+      }
+      match_expressions {
+        key = "app.kubernetes.io/instance"
+        operator = "In"
+        values = [local.instance]
       }
     }
 
@@ -31,9 +48,7 @@ resource "kubernetes_deployment" "subnet_router" {
     template {
       metadata {
         name = var.pod_name
-        labels = {
-          app = var.app_name 
-        }
+        labels = local.labels
       }
       spec {
         service_account_name = var.service_account 
@@ -81,6 +96,17 @@ resource "kubernetes_deployment" "subnet_router" {
               add = ["NET_ADMIN", "SYS_MODULE"]
             }
           }
+          
+          resources {
+            limits = {
+              cpu = "0.5"
+              memory = "512Mi"
+            }
+            requests = {
+              cpu = "250m"
+              memory = "50Mi"
+            }
+          }
 
           /*
           liveness_probe {
@@ -95,7 +121,7 @@ resource "kubernetes_deployment" "subnet_router" {
           */
 
         } // container
-      } // ispec
+      } // pod_spec
     } // template
-  } // ospec
+  } // deployment_spec
 }
