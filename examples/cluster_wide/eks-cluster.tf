@@ -43,11 +43,6 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
 }
 
-variable "region" {
-  default     = "us-east-2"
-  description = "AWS region"
-}
-
 provider "aws" {
   region = var.region
 }
