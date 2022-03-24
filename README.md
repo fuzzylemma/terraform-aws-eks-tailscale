@@ -8,6 +8,22 @@ Terraform module to make AWS EKS cluster accesible through [tailscale](https://t
 
 ## usage
 ```
+## Config kuberenetes cluster
+data "aws_eks_cluster" "this" {
+  name = var.eks_cluster_id
+}
+
+data "aws_eks_cluster_auth" "this" {
+  name = var.eks_cluster_id
+}
+
+provider "kubernetes" {
+  host = data.aws_eks_cluster.this.endpoint
+  token = data.aws_eks_cluster_auth.this.token
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
+}
+
+## Deploy tailscale to cluster
 module "tailscale" {
     source = "fuzzylemma/eks-tailscale/aws" 
     version = "0.1.0"
@@ -15,6 +31,7 @@ module "tailscale" {
     eks_cluster_id = "<aws eks cluster id>"
 }
 ```
+
 > Note: this deployment does not configure security groups. The deployment should be able to reach tailscale DERP servers over port `443`. Ingress and egress rules are needed for this.
 
 > Note: after deployment, the routes need to be manually approved in tailscale UI before they are accessible.
